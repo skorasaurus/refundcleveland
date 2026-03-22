@@ -155,6 +155,16 @@ def send_email(submitter_email, id):
                       f"View or share your budget here: https://www.refundcleveland.com/{id}/view\n\n"
                       f"Brought to you by your friends at Open Cleveland! https://www.opencleveland.org"})
 
+def geocode_address(query):
+    req = urllib.request.Request(
+            query, headers={'User-Agent': 'RefundCleveland/1.0'}
+        )
+    nom_json = json.load(urllib.request.urlopen(req))
+    lat = nom_json[0]["lat"]
+    lon = nom_json[0]["lon"]
+    arcgis_query = f'https://services3.arcgis.com/dty2kHktVXHrqO8i/arcgis/rest/services/Cleveland_Wards_1_2_25_Topocleaned_pop20/FeatureServer/0/query?geometry={lon},{lat}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=ward&f=json'
+    
+    return json.load(urllib.request.urlopen(arcgis_query))
 
 def privacy_policy(request):
     return render(request, 'privacy-policy.html', {
