@@ -124,10 +124,10 @@ def view_budget(request, budget_id):
 # TODO(DevLoggith): update this function to use cleveland open data's "City of Cleveland Wards (2026)" dataset along with nominatim geocoding
 def lookup_address(request):
     body = json.loads(request.body)
-    address = body['address'] + ' Cleveland Ohio'
+    address = body['address'] + ' cleveland ohio'
 
-    query = "https://www.googleapis.com/civicinfo/v2/divisionsByAddress?address=" + urllib.parse.quote_plus(
-        address) + "&key=" + GOOGLE_API_KEY
+    nom_query = "https://nominatim.openstreetmap.org/search?q=" + urllib.parse.quote_plus(
+        address) + "&format=json&limit=1&countrycodes=us"
 
     try:
         json_response = json.load(urllib.request.urlopen(query))
