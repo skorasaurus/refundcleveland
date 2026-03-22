@@ -130,14 +130,13 @@ def lookup_address(request):
         address) + "&format=json&limit=1&countrycodes=us"
 
     try:
-        json_response = json.load(urllib.request.urlopen(query))
+        ward_json  = geocode_address(nom_query)
+        ward = ward_json["features"][0]["attributes"]["Ward"]
 
-        ward = [x.split(':')[-1] for x in json_response['divisions'] if 'ward' in x]
-        if ward:
-            ward = ward[0]
-            return render(request, 'lookup_address.html', {
-                'ward': ward
-            })
+        return render(request, 'lookup_address.html', {
+            'ward': ward
+        })
+
     except:
         return render(request, 'lookup_address.html', {
             'ward': None
