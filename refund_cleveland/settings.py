@@ -16,7 +16,6 @@ try:
     from local_settings import *
 except ImportError:
     SECRET_KEY = os.getenv('SECRET_KEY')
-    GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
     pass
 import django_heroku
 

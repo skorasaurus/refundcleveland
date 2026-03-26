@@ -13,7 +13,6 @@ import requests
 try:
     from local_settings import *
 except ImportError:
-    GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
     MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY')
     pass
 
