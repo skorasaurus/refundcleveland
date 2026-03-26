@@ -12,7 +12,7 @@
     <p>Don't know your political ward? No problem! You can look it up on Cleveland's website <a href="https://clevelandcitycouncil.org/find-my-ward" target="_blank" rel="noopener noreferrer">find-my-ward</a>
         or we can look it up for you if you enter your address here:</p>
     <label for="id_address">Address:</label><br>
-    <input type="text" id="id_address"/><br><br>
+    <input type="text" id="id_address"/><br><small>Search by <a href="https://nominatim.org">Nominatim</a> | ©<a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a></small><br>
     <input type="button" onclick="lookup_address()" value="Find Ward" id="submit_btn">
 
 {% endblock content %}
