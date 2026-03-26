@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from peoples_budget import models
 import uuid
 import urllib, urllib.request
-import datetime
+import time
 import requests
 
 try:
@@ -121,7 +121,7 @@ def view_budget(request, budget_id):
         'mayor_json_data': mayor_json_file
     })
 
-# TODO(DevLoggith): update this function to use cleveland open data's "City of Cleveland Wards (2026)" dataset along with nominatim geocoding
+
 def lookup_address(request):
     body = json.loads(request.body)
     address = body['address'] + ' cleveland ohio'
@@ -154,10 +154,12 @@ def send_email(submitter_email, id):
                       f"View or share your budget here: https://www.refundcleveland.com/{id}/view\n\n"
                       f"Brought to you by your friends at Open Cleveland! https://www.opencleveland.org"})
 
+
 def geocode_address(query):
     req = urllib.request.Request(
             query, headers={'User-Agent': 'RefundCleveland/1.0'}
         )
+    time.sleep(1) # add 1 second wait as per Nominatim's rate limits
     nom_json = json.load(urllib.request.urlopen(req))
     lat = nom_json[0]["lat"]
     lon = nom_json[0]["lon"]
@@ -165,11 +167,13 @@ def geocode_address(query):
     
     return json.load(urllib.request.urlopen(arcgis_query))
 
+
 def privacy_policy(request):
     return render(request, 'privacy-policy.html', {
         'home': True,
         'body_classes': 'privacy-policy'
     })
+
 
 def understanding_the_budget(request):
     return render(request, 'understanding-the-budget.html', {
