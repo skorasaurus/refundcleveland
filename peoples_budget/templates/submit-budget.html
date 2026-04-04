@@ -2,18 +2,28 @@
 {% load static %}
 
 {% block content %}
-    <p>Upon submission, we will email you a link to the budget you designed and a letter you can send to your city council person with your budget attached.  The link will allow you to share your budget on social media and review it at your leisure.</p>
+ 
+<h1>Submit Your Budget</h1>
+
+    <p>Upon submission, we will email you a link to the budget you designed and a letter you can send to your city council person with your budget attached.  The link will allow you to share your budget on social media and review it later.</p>
     <form id="submit_form" action="/store-data/" method="post">
         {% csrf_token %}
         {{ form }}
         <input type="submit" value="Submit Your Budget" id="submit_btn">
     </form>
 
-    <p>Don't know your political ward? No problem! You can look it up on Cleveland's website <a href="https://clevelandcitycouncil.org/find-my-ward" target="_blank" rel="noopener noreferrer">find-my-ward</a>
-        or we can look it up for you if you enter your address here:</p>
+    <h2> Find Your Ward </h2>
+    <p> We ask for your ward so we can identify the most relevant councilperson for you to contact (if you wish). </p>
+    <p>Don't know your political ward? No problem! You can look it up on Cleveland's <a href="https://clevelandcitycouncil.org/find-my-ward" target="_blank" rel="noopener noreferrer">find-my-ward</a>
+        or we can look it up for you if you enter your address here:</p> 
+        <p> We do not store your address; </p>
+    <form id="address_form">
     <label for="id_address">Address:</label><br>
-    <input type="text" id="id_address"/><br><small>Search by <a href="https://nominatim.org">Nominatim</a> | ©<a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a></small><br>
+    <input type="text" id="id_address"/><br>
+
     <input type="button" onclick="lookup_address()" value="Find Ward" id="submit_btn">
+    </form>
+    <p><small>Search by <a href="https://nominatim.org">Nominatim</a> | ©<a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a></small></p>
 
 {% endblock content %}
 
