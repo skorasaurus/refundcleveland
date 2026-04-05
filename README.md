@@ -54,7 +54,6 @@ If you need to install PostgreSQL, please follow these steps:
 Copy and rename **local_settings_template.py** to **local_settings.py**, and fill in environmental variables:
 
 `SECRET_KEY` -- Django’s Secret Key used by the project
-`GOOGLE_API_KEY` -- Used for Google's Civic Information API to map Address to Political Ward
 `MAILGUN_API_KEY` -- Used for the Mailgun API that sends out emails when a user submits a budget
 
 `DATABASES` -- map of parameters to define the connection to a database.  In prod, we are using a postgres db hosted on heroku, and the connection is injected there via config vars.  For local versions, enter the information you used when creating the database.  Example:

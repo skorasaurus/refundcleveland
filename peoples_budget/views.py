@@ -7,13 +7,12 @@ from django.shortcuts import redirect
 from peoples_budget import models
 import uuid
 import urllib, urllib.request
-import datetime
+import time
 import requests
 
 try:
     from local_settings import *
 except ImportError:
-    GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
     MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY')
     pass
 
@@ -121,23 +120,22 @@ def view_budget(request, budget_id):
         'mayor_json_data': mayor_json_file
     })
 
-# TODO(DevLoggith): update this function to use cleveland open data's "City of Cleveland Wards (2026)" dataset along with nominatim geocoding
+
 def lookup_address(request):
     body = json.loads(request.body)
-    address = body['address'] + ' Cleveland Ohio'
+    address = body['address'] + ' cleveland ohio'
 
-    query = "https://www.googleapis.com/civicinfo/v2/divisionsByAddress?address=" + urllib.parse.quote_plus(
-        address) + "&key=" + GOOGLE_API_KEY
+    nom_query = "https://nominatim.openstreetmap.org/search?q=" + urllib.parse.quote_plus(
+        address) + "&format=json&limit=1&countrycodes=us"
 
     try:
-        json_response = json.load(urllib.request.urlopen(query))
+        ward_json  = geocode_address(nom_query)
+        ward = ward_json["features"][0]["attributes"]["Ward"]
 
-        ward = [x.split(':')[-1] for x in json_response['divisions'] if 'ward' in x]
-        if ward:
-            ward = ward[0]
-            return render(request, 'lookup_address.html', {
-                'ward': ward
-            })
+        return render(request, 'lookup_address.html', {
+            'ward': ward
+        })
+
     except:
         return render(request, 'lookup_address.html', {
             'ward': None
@@ -156,11 +154,25 @@ def send_email(submitter_email, id):
                       f"Brought to you by your friends at Open Cleveland! https://www.opencleveland.org"})
 
 
+def geocode_address(query):
+    req = urllib.request.Request(
+            query, headers={'User-Agent': 'RefundCleveland/1.0'}
+        )
+    time.sleep(1) # add 1 second wait as per Nominatim's rate limits
+    nom_json = json.load(urllib.request.urlopen(req))
+    lat = nom_json[0]["lat"]
+    lon = nom_json[0]["lon"]
+    arcgis_query = f'https://services3.arcgis.com/dty2kHktVXHrqO8i/arcgis/rest/services/Cleveland_Wards_1_2_25_Topocleaned_pop20/FeatureServer/0/query?geometry={lon},{lat}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=ward&f=json'
+    
+    return json.load(urllib.request.urlopen(arcgis_query))
+
+
 def privacy_policy(request):
     return render(request, 'privacy-policy.html', {
         'home': True,
         'body_classes': 'privacy-policy'
     })
+
 
 def understanding_the_budget(request):
     return render(request, 'understanding-the-budget.html', {
